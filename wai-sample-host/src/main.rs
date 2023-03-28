@@ -19,7 +19,7 @@ impl sample_protocol_host::SampleProtocolHost for SampleProtocolHost {
 fn main() {
     let compiler = ::wasmer::Cranelift::default();
     let engine = ::wasmer::Universal::new(compiler).engine();
-    let mut store = Store::new(&engine); //wasmer and wai_bindgen_wasmer are in conflict?
+    let mut store = Store::new(unsafe { std::mem::transmute(&engine) }); //wasmer and wai_bindgen_wasmer are in conflict?
 
     let module = Module::new(&store, PLUGIN_BYTES).expect("should create module");
 
