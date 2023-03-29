@@ -1,12 +1,11 @@
 use sample_protocol_plugin::SampleProtocolPluginData;
-use wai_bindgen_wasmtime::wasmtime::{Config, Engine, Linker, Module, Store};
 
 const PLUGIN_BYTES: &'static [u8] = include_bytes!(
     "../../wai-sample-plugin/target/wasm32-unknown-unknown/debug/wai_sample_plugin.wasm"
 );
 
-wai_bindgen_wasmtime::import!("../sample-protocol-plugin.wai");
-wai_bindgen_wasmtime::export!("../sample-protocol-host.wai");
+wai_bindgen_wasmer::import!("../sample-protocol-plugin.wai");
+wai_bindgen_wasmer::export!("../sample-protocol-host.wai");
 
 impl sample_protocol_host::SampleProtocolHost for SampleProtocolPluginData {
     fn add_one(&mut self, num: u32) -> u32 {
@@ -15,8 +14,7 @@ impl sample_protocol_host::SampleProtocolHost for SampleProtocolPluginData {
 }
 
 fn main() {
-    let config = Config::new();
-    let engine = Engine::new(&config).expect("should create engine");
+    let compiler = wai_bindgen_wasmer::wasmer::Cranelift::default();
 
     let mut store = Store::new(&engine, SampleProtocolPluginData::default());
 

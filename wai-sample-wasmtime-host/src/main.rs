@@ -12,6 +12,14 @@ impl sample_protocol_host::SampleProtocolHost for SampleProtocolPluginData {
     fn add_one(&mut self, num: u32) -> u32 {
         num + 1
     }
+
+    fn move_y(
+        &mut self,
+        mut vec: sample_protocol_host::Vector3f,
+    ) -> sample_protocol_host::Vector3f {
+        vec.y += 1.0;
+        vec
+    }
 }
 
 fn main() {
@@ -34,4 +42,16 @@ fn main() {
     .expect("should create instance");
 
     println!("{:?}", plugin.add_three(&mut store, 5));
+
+    println!(
+        "{:?}",
+        plugin.move_vec(
+            &mut store,
+            sample_protocol_plugin::Vector3f {
+                x: 1.0,
+                y: 2.0,
+                z: 3.0
+            }
+        )
+    );
 }
